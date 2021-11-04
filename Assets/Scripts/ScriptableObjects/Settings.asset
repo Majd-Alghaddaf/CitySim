@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cf49bc236b0a0e40a90553e349fe2c4, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  debugTrafficLights: 1
-  debugWaypointConnections: 1
-  trafficLightOverlapSphereRadius: 28.64
+  debugTrafficLights: 0
+  debugWaypointConnections: 0
+  trafficLightOverlapSphereRadius: 20
   gizmoSphereRadius: 0.5
   trafficWaypointBoxColliderSize: {x: 3, y: 2, z: 3}
   trafficLightMaskName: Traffic Light

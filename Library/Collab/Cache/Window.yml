@@ -14,9 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SimpleSelectedItems:
     m_Keys:
-    - Assets/Scripts/TrafficLightSpecific/TrafficWaypoint.cs
+    - Assets/Scenes/Playground.unity
+    - Assets/Scripts/Camera.meta
+    - Assets/Scripts/Camera/CameraController.cs
+    - Assets/Scripts/Camera/CameraController.cs.meta
+    - Assets/Scripts/Player/PlayerMovement.cs
+    - Assets/Sprites.meta
+    - Packages/manifest.json
+    - Packages/packages-lock.json
     - 
-    m_Values: 0101
+    m_Values: 000000000000000000
   RevisionSummary: 
   ChangesSearchValue: 
   SelectedHistoryRevision: 

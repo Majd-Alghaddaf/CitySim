@@ -10,22 +10,34 @@ public class PathEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        Path path = (Path)target;
+        Object[] paths = targets;
         if (GUILayout.Button("Populate Waypoints List"))
         {
-            path.PopulateWaypointsList();
+            foreach(Path path in paths)
+            {
+                path.PopulateWaypointsList();
+            }
         }
         else if (GUILayout.Button("Rename Waypoints"))
         {
-            path.RenameWaypoints();
+            foreach (Path path in paths)
+            {
+                path.RenameWaypoints();
+            }
         }
         else if(GUILayout.Button("Setup End Waypoints"))
         {
-            path.SetupEndWaypoints();
+            foreach (Path path in paths)
+            {
+                path.SetupEndWaypoints();
+            }
         }
         else if (GUILayout.Button("Generate Intermediate Waypoints"))
         {
-            path.GenerateIntermediatePoints();
+            foreach (Path path in paths)
+            {
+                path.GenerateIntermediatePoints();
+            }
         }
 
         if (GUI.changed)
