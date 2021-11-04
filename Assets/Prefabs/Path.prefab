@@ -46,7 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypointPrefab: {fileID: 6009423254448080897, guid: 2de99d02628cd9349a191befa515b24c, type: 3}
   debugWaypointConnections: 1
-  trafficWaypointBoxColliderSize: {x: 5, y: 2, z: 5}
   settings: {fileID: 11400000, guid: 26f132a6f3790084686d20408e423071, type: 2}
   waypoints:
   - {fileID: 5517724612225427695}
