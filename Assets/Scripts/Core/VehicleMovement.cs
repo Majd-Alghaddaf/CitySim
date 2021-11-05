@@ -41,11 +41,11 @@ public class VehicleMovement : MonoBehaviour
 
     private void EvaluateNextDestination()
     {
-        TrafficWaypoint trafficWaypointComponent = currentWaypoint.GetComponent<TrafficWaypoint>();
-        if (trafficWaypointComponent != null)
+        EndWaypoint endWaypointComponent = currentWaypoint.GetComponent<EndWaypoint>();
+        if (endWaypointComponent != null)
         {
-            TrafficLightResponse trafficLightResponse = CentralTrafficSystem.Instance.RequestNewPath(trafficWaypointComponent);
-            SetPathAndCurrentWaypointIndex(trafficLightResponse.pathResponse, trafficLightResponse.waypointIndexResponse);
+            GeneratedPathResponse generatedPathResponse = CentralTrafficSystem.Instance.RequestNewPath(endWaypointComponent);
+            SetPathAndCurrentWaypointIndex(generatedPathResponse.pathResponse, generatedPathResponse.waypointIndexResponse);
             currentWaypoint = currentPath.GetWaypointByIndex(currentWaypointIndex);
         }
         else

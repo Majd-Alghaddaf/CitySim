@@ -18,17 +18,17 @@ public class CentralTrafficSystemEditor : Editor
         {
             centralTrafficSystem.PopulateVehiclesList();
         }
-        else if (GUILayout.Button("Populate Traffic Lights List"))
+        else if (GUILayout.Button("Populate End Components List"))
         {
-            centralTrafficSystem.PopulateTrafficLightsList();
+            centralTrafficSystem.PopulateEndComponentsList();
         }
         else if (GUILayout.Button("Rename & Setup Paths"))
         {
             centralTrafficSystem.RenameAndSetupPaths();
         }
-        else if (GUILayout.Button("Rename & Setup Traffic Lights"))
+        else if (GUILayout.Button("Rename & Setup End Components"))
         {
-            centralTrafficSystem.RenameAndSetupTrafficLights();
+            centralTrafficSystem.RenameAndSetupEndComponents();
         }
 
         if (GUI.changed)

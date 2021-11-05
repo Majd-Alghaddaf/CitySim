@@ -72,10 +72,10 @@ public class Path : MonoBehaviour
         for (int i = 0; i <= waypoints.Count - 1; i++)
         {
             EditorUtility.SetDirty(waypoints[i].gameObject);
-            TrafficWaypoint trafficWaypointComponent = waypoints[i].GetComponent<TrafficWaypoint>();
-            if (trafficWaypointComponent != null)
+            EndWaypoint endWaypointComponent = waypoints[i].GetComponent<EndWaypoint>();
+            if (endWaypointComponent != null)
             {
-                waypoints[i].gameObject.name = $"{name}-TW{i}";
+                waypoints[i].gameObject.name = $"{name}-EW{i}";
             }
             else
             {
@@ -84,9 +84,9 @@ public class Path : MonoBehaviour
         }
     }
 
-    public void SetupEndWaypoints()
+    public void SetupFirstAndEndWaypoint()
     {
-        SetupTrafficWaypoint();
+        SetupEndWaypoint();
 
         GameObject firstWaypointGameObject = waypoints[0].gameObject;
         SetBoxColliderAndLayerForWaypoint(firstWaypointGameObject);
@@ -94,30 +94,30 @@ public class Path : MonoBehaviour
         PopulateWaypointsList();
     }
 
-    private void SetupTrafficWaypoint()
+    private void SetupEndWaypoint()
     {
-        GameObject trafficWaypointGameObject = waypoints[waypoints.Count - 1].gameObject;
+        GameObject endWaypointGameObject = waypoints[waypoints.Count - 1].gameObject;
 
-        TrafficWaypoint trafficWaypoint = trafficWaypointGameObject.AddComponent<TrafficWaypoint>();
-        DestroyImmediate(trafficWaypointGameObject.GetComponent<Waypoint>());
+        endWaypointGameObject.AddComponent<EndWaypoint>();
+        DestroyImmediate(endWaypointGameObject.GetComponent<Waypoint>());
 
-        SetBoxColliderAndLayerForWaypoint(trafficWaypointGameObject);
+        SetBoxColliderAndLayerForWaypoint(endWaypointGameObject);
     }
 
     private void SetBoxColliderAndLayerForWaypoint(GameObject waypointGameObject)
     {
-        BoxCollider waypointBoxCollider = waypointGameObject.GetComponent<BoxCollider>();
-        if (waypointBoxCollider == null)
+        BoxCollider existingEndWaypointCollider = waypointGameObject.GetComponent<BoxCollider>();
+        if (existingEndWaypointCollider == null)
         {
-            BoxCollider trafficWaypointCollider = waypointGameObject.AddComponent<BoxCollider>();
-            trafficWaypointCollider.size = settings.trafficWaypointBoxColliderSize;
-            trafficWaypointCollider.isTrigger = true;
+            BoxCollider endWaypointCollider = waypointGameObject.AddComponent<BoxCollider>();
+            endWaypointCollider.size = settings.endWaypointBoxColliderSize;
+            endWaypointCollider.isTrigger = true;
         }
         else
         {
-            if (waypointBoxCollider.size != settings.trafficWaypointBoxColliderSize)
+            if (existingEndWaypointCollider.size != settings.endWaypointBoxColliderSize)
             {
-                waypointBoxCollider.size = settings.trafficWaypointBoxColliderSize;
+                existingEndWaypointCollider.size = settings.endWaypointBoxColliderSize;
             }
         }
         waypointGameObject.layer = LayerMask.NameToLayer("End Waypoint");
