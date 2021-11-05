@@ -1,38 +1,66 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour, ICollisionAvoidanceObstacle
 {
-    CharacterController characterController;
+    private CharacterController controller;
+    private bool groundedPlayer;
+    private Transform cameraMainTransform;
 
-    [SerializeField] private float speed = 6.0f;
-    [SerializeField] private float jumpSpeed = 8.0f;
-    [SerializeField] private float gravity = 20.0f;
+    [SerializeField] private InputActionReference movementControl;
+    [SerializeField] private InputActionReference jumpControl;
+    [SerializeField] private Vector3 playerVelocity;
+    [SerializeField] private float playerSpeed = 2.0f;
+    [SerializeField] private float jumpHeight = 1.0f;
+    [SerializeField] private float gravityValue = -9.81f;
+    [SerializeField] private float rotationSpeed = 4f;
 
-    private Vector3 moveDirection = Vector3.zero;
-
-    void Start()
+    private void OnEnable()
     {
-        characterController = GetComponent<CharacterController>();
+        movementControl.action.Enable();
+        jumpControl.action.Enable();
+    }
+
+    private void OnDisable()
+    {
+        movementControl.action.Disable();
+        jumpControl.action.Disable();
+    }
+
+    private void Start()
+    {
+        controller = gameObject.GetComponent<CharacterController>();
+        cameraMainTransform = Camera.main.transform;
     }
 
     void Update()
     {
-        if (characterController.isGrounded)
+        groundedPlayer = controller.isGrounded;
+        if (groundedPlayer && playerVelocity.y < 0)
         {
-
-            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-            moveDirection *= speed;
-
-            if (Input.GetButton("Jump"))
-            {
-                moveDirection.y = jumpSpeed;
-            }
+            playerVelocity.y = 0f;
         }
 
-        moveDirection.y -= gravity * Time.deltaTime;
+        Vector2 movement = movementControl.action.ReadValue<Vector2>();
+        Vector3 move = new Vector3(movement.x, 0, movement.y);
+        move = cameraMainTransform.forward * move.z + cameraMainTransform.right * move.x;
+        move.y = 0f;
 
-        characterController.Move(moveDirection * Time.deltaTime);
+        controller.Move(move * Time.deltaTime * playerSpeed);
+
+        // Changes the height position of the player..
+        if (jumpControl.action.triggered && groundedPlayer)
+        {
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+        }
+
+        playerVelocity.y += gravityValue * Time.deltaTime;
+        controller.Move(playerVelocity * Time.deltaTime);
+
+        if(movement != Vector2.zero)
+        {
+            float targetAngle = Mathf.Atan2(movement.x, movement.y) * Mathf.Rad2Deg + cameraMainTransform.eulerAngles.y;
+            Quaternion rotation = Quaternion.Euler(0f, targetAngle, 0f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
+        }
     }
 }

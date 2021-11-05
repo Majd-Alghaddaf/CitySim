@@ -25,11 +25,11 @@ public class PathEditor : Editor
                 path.RenameWaypoints();
             }
         }
-        else if(GUILayout.Button("Setup End Waypoints"))
+        else if(GUILayout.Button("Setup First & End Waypoint"))
         {
             foreach (Path path in paths)
             {
-                path.SetupEndWaypoints();
+                path.SetupFirstAndEndWaypoint();
             }
         }
         else if (GUILayout.Button("Generate Intermediate Waypoints"))

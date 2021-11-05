@@ -14,16 +14,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SimpleSelectedItems:
     m_Keys:
+    - Assets/Prefabs/StopSign.prefab
+    - Assets/Prefabs/StopSign.prefab.meta
     - Assets/Scenes/Playground.unity
     - Assets/Scripts/Camera.meta
     - Assets/Scripts/Camera/CameraController.cs
     - Assets/Scripts/Camera/CameraController.cs.meta
-    - Assets/Scripts/Player/PlayerMovement.cs
-    - Assets/Sprites.meta
-    - Packages/manifest.json
-    - Packages/packages-lock.json
+    - Assets/Scripts/Core/CentralTrafficSystem.cs
+    - Assets/Scripts/Core/Collision Avoidance.meta
+    - Assets/Scripts/Core/Collision Avoidance/ICollisionAvoidanceObstacle.cs
+    - Assets/Scripts/Core/Collision Avoidance/ICollisionAvoidanceObstacle.cs.meta
+    - Assets/Scripts/Core/Collision Avoidance/VehicleCollisionAvoidance.cs
+    - Assets/Scripts/Core/Collision Avoidance/VehicleCollisionAvoidance.cs.meta
+    - Assets/Scripts/Core/EndComponents.meta
+    - Assets/Scripts/Core/EndComponents/EndComponent.cs
+    - Assets/Scripts/Core/EndComponents/EndComponent.cs.meta
+    - Assets/Scripts/Core/EndComponents/EndWaypoint.cs
+    - Assets/Scripts/Core/EndComponents/EndWaypoint.cs.meta
+    - Assets/Scripts/Core/EndComponents/GeneratedPathResponse.cs
+    - Assets/Scripts/Core/EndComponents/GeneratedPathResponse.cs.meta
+    - Assets/Scripts/Core/EndComponents/StopSign.cs
+    - Assets/Scripts/Core/EndComponents/StopSign.cs.meta
+    - Assets/Scripts/Core/EndComponents/TrafficLight.cs
+    - Assets/Scripts/Core/EndComponents/TrafficLight.cs.meta
+    - Assets/Scripts/Core/Path.cs
+    - Assets/Scripts/Core/VehicleMovement.cs
+    - Assets/Scripts/Editor/CentralTrafficSystemEditor.cs
+    - Assets/Scripts/Editor/EndOfPathComponentEditor.cs
+    - Assets/Scripts/Editor/EndOfPathComponentEditor.cs.meta
+    - Assets/Scripts/Editor/PathEditor.cs
+    - Assets/Scripts/Player/Input.meta
+    - Assets/Scripts/Player/Input/PlayerControls.inputactions
+    - Assets/Scripts/Player/Input/PlayerControls.inputactions.meta
+    - Assets/Scripts/ScriptableObjects/Settings.asset
+    - Assets/Scripts/ScriptableObjects/Settings.cs
+    - Assets/Scripts/Traffic Light.meta
+    - ProjectSettings/TagManager.asset
     - 
-    m_Values: 000000000000000000
+    m_Values: 01010101010101010101010101010101010101010101010101010101010101010101010101
   RevisionSummary: 
   ChangesSearchValue: 
   SelectedHistoryRevision: 
