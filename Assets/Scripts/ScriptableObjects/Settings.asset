@@ -16,9 +16,9 @@ MonoBehaviour:
   debugWaypointConnections: 0
   endComponentOverlapSphereRadius: 25
   gizmoSphereRadius: 0.5
-  endWaypointBoxColliderSize: {x: 5, y: 2, z: 5}
+  endWaypointBoxColliderSize: {x: 3.5, y: 2, z: 3.5}
   endComponentMaskName: End Component
   endWaypointMaskName: End Waypoint
-  greenLightDuration: 1.5
+  greenLightDuration: 5
   yellowLightDuration: 0.5
   redLightDuration: 0.25

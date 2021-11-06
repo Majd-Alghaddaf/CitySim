@@ -3,6 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct WaypointInformation
+{
+    public Path path;
+    public Waypoint waypoint;
+    public int index;
+
+    public WaypointInformation(Path path, Waypoint waypoint, int index)
+    {
+        this.path = path;
+        this.waypoint = waypoint;
+        this.index = index;
+    }
+}
+
 public class CentralTrafficSystem : MonoBehaviour
 {
     private static CentralTrafficSystem _instance;
@@ -18,7 +32,7 @@ public class CentralTrafficSystem : MonoBehaviour
             _instance = this;
         }
 
-        if(generateInitialPopulation) // to not always generate automatically for testing purposes
+        if (generateInitialPopulation) // to not always generate automatically for testing purposes
         {
             InitialMapPopulation();
         }
@@ -38,65 +52,75 @@ public class CentralTrafficSystem : MonoBehaviour
     [SerializeField] private List<VehicleMovement> vehicles = new List<VehicleMovement>();
     [SerializeField] private List<EndComponent> endComponents = new List<EndComponent>();
 
-    private int initialPathIndex;
-    private int initialWaypointIndex;
-    private Path initialPath;
-    private Waypoint initialWaypoint;
-
-    private List<Waypoint> usedWaypoints = new List<Waypoint>();
-
     private void InitialMapPopulation()
     {
         int numOfVehiclesToInstantiate = paths.Count * vehicleSpawningMultiplier;
+
+        List<WaypointInformation> availableWaypointsInformation = GetAllAvailableWaypointsInformation();
+
         int i = 0;
-
-        while(i < numOfVehiclesToInstantiate)
+        while (i < numOfVehiclesToInstantiate && availableWaypointsInformation.Count > 0)
         {
-            SetInitialPathAndWaypoint();
-
-            if (VehicleAlreadySpawnedAtInitialWaypoint())
-            {
-                continue;
-            }
-
-            usedWaypoints.Add(initialWaypoint);
-
-            GameObject spawnedVehicle = InstantiateRandomVehiclePrefabAtWaypointPosition();
+            WaypointInformation randomAvailableWaypointInformation = GetRandomAvailableWaypointInformation(availableWaypointsInformation);
+            GameObject spawnedVehicle = InstantiateVehiclesAndSetInitialConditions(randomAvailableWaypointInformation);
 
             VehicleMovement spawnedVehicleMovement = spawnedVehicle.GetComponent<VehicleMovement>();
-            spawnedVehicleMovement.gameObject.name = "Vehicle" + spawnedVehicleMovement.gameObject.transform.GetSiblingIndex();
-            spawnedVehicleMovement.SetPathAndCurrentWaypointIndex(initialPath, initialWaypointIndex);
+            spawnedVehicleMovement.SetPathAndCurrentWaypointIndex(randomAvailableWaypointInformation.path, randomAvailableWaypointInformation.index);
             vehicles.Add(spawnedVehicleMovement);
 
             i++;
         }
     }
-
-    private GameObject InstantiateRandomVehiclePrefabAtWaypointPosition()
+    private List<WaypointInformation> GetAllAvailableWaypointsInformation()
     {
-        Vector3 initialSpawnPosition = initialWaypoint.transform.position;
+        int i = 0;
+        List<WaypointInformation> availableWaypointsInformation = new List<WaypointInformation>();
+        foreach (Path path in paths)
+        {
+            for (i = 0; i < path.waypoints.Count; i++)
+            {
+                WaypointInformation waypointInformation = new WaypointInformation(path, path.waypoints[i], i);
+                availableWaypointsInformation.Add(waypointInformation);
+            }
+        }
+
+        return availableWaypointsInformation;
+    }
+
+    private WaypointInformation GetRandomAvailableWaypointInformation(List<WaypointInformation> availableWaypointsInformation)
+    {
+        int randomAvailableWaypointIndex = UnityEngine.Random.Range(0, availableWaypointsInformation.Count);
+        WaypointInformation randomAvailableWaypointInformation = availableWaypointsInformation[randomAvailableWaypointIndex];
+        availableWaypointsInformation.Remove(randomAvailableWaypointInformation);
+        return randomAvailableWaypointInformation;
+    }
+
+    private GameObject InstantiateVehiclesAndSetInitialConditions(WaypointInformation randomAvailableWaypointInformation)
+    {
+        Vector3 initialSpawnPosition = randomAvailableWaypointInformation.waypoint.transform.position;
         int initialVehiclePrefabToSpawnIndex = UnityEngine.Random.Range(0, vehiclesPrefabs.Count);
-        return Instantiate(vehiclesPrefabs[initialVehiclePrefabToSpawnIndex], initialSpawnPosition, Quaternion.identity, vehiclesContainer.transform);
-    }
+        GameObject spawnedVehicle = Instantiate(vehiclesPrefabs[initialVehiclePrefabToSpawnIndex], initialSpawnPosition, Quaternion.identity, vehiclesContainer.transform);
+        spawnedVehicle.name = "Vehicle" + spawnedVehicle.transform.GetSiblingIndex();
 
-    private bool VehicleAlreadySpawnedAtInitialWaypoint()
-    {
-        return usedWaypoints.Contains(initialWaypoint);
-    }
+        Vector3 lookDirection;
+        if (randomAvailableWaypointInformation.index == 0)
+        {
+            lookDirection = randomAvailableWaypointInformation.path.waypoints[randomAvailableWaypointInformation.index + 1].transform.position - randomAvailableWaypointInformation.waypoint.transform.position;
+        }
+        else
+        {
+            lookDirection = randomAvailableWaypointInformation.waypoint.transform.position - randomAvailableWaypointInformation.path.waypoints[randomAvailableWaypointInformation.index - 1].transform.position;
+        }
+        spawnedVehicle.transform.rotation = Quaternion.LookRotation(lookDirection);
 
-    private void SetInitialPathAndWaypoint()
-    {
-        initialPathIndex = UnityEngine.Random.Range(0, paths.Count);
-        initialPath = paths[initialPathIndex];
-        initialWaypointIndex = UnityEngine.Random.Range(0, initialPath.waypoints.Count - 1); // -1 because we don't want to take the last wp which is an intersection wp
-        initialWaypoint = initialPath.waypoints[initialWaypointIndex];
+        return spawnedVehicle;
     }
 
     public GeneratedPathResponse RequestNewPath(EndWaypoint currentEndWaypoint)
     {
         Collider[] hitColliders = Physics.OverlapSphere(currentEndWaypoint.transform.position, settings.endComponentOverlapSphereRadius, LayerMask.GetMask(settings.endComponentMaskName));
 
-        if(hitColliders.Length > 1 || hitColliders.Length == 0)
+        if (hitColliders.Length > 1 || hitColliders.Length == 0)
         {
             Debug.LogError($"Found no or more than one end component (traffic light or stop sign) near {currentEndWaypoint} - this should not happen");
         }
